@@ -129,22 +129,22 @@ class PopupManager {
 
   getDefaultQuickActionTemplates() {
     return {
-      newConnection: `Hi {recipientName}, I'm Sachin, pursuing MS in CS at NYU. I'm interested in the {positionTitle} role at {companyName} and would love to connect and learn about your experience there. Thanks!`,
-      recruiter: `Hi {recipientName}, I'm Sachin, an MS in CS student at NYU seeking full-time opportunities starting May 2026. I'd love to connect and explore roles at {companyName}. Thanks!`,
-      firstReferral: `Hi {recipientName}, hope you're doing well! I'm reaching out because I'm very interested in the {positionTitle} role at {companyName}. I'm currently pursuing MS in CS at NYU and looking for full-time opportunities starting May 2026. Would you be open to referring me? Here's my resume: {resumeUrl}. Thanks so much for your time!`,
-      followUpReferral: `Hi {recipientName}, hope you're doing well! I wanted to follow up — I'm still actively looking for full-time roles starting May 2026. I noticed the {positionTitle} position at {companyName} and think it's a great fit. Would you be open to referring me again? Job link: {jobLinks}. Thanks a lot!`
+      newConnection: `Hi {recipientName}, I'm {firstName}, pursuing {degree} at {university}. I'm interested in the {positionTitle} role at {companyName} and would love to connect and learn about your experience there. Thanks!`,
+      recruiter: `Hi {recipientName}, I'm {firstName}, a {degree} student at {university} seeking {opportunityType} {timeline}. I'd love to connect and explore roles at {companyName}. Thanks!`,
+      firstReferral: `Hi {recipientName}, hope you're doing well! I'm reaching out because I'm very interested in the {positionTitle} role at {companyName}. I'm currently pursuing {degree} at {university} and looking for {opportunityType} {timeline}. Would you be open to referring me? Here's my resume: {resumeUrl}. Thanks so much for your time!`,
+      followUpReferral: `Hi {recipientName}, hope you're doing well! I wanted to follow up — I'm still actively looking for {opportunityType} {timeline}. I noticed the {positionTitle} position at {companyName} and think it's a great fit. Would you be open to referring me again? Job link: {jobLinks}. Thanks a lot!`
     };
   }
 
   getDefaultConfig() {
     return {
       personalInfo: {
-        firstName: 'Sachin',
-        lastName: 'Adlakha',
+        firstName: '',
+        lastName: '',
         email: '',
         phone: '',
-        university: 'NYU',
-        degree: 'MS in Computer Science',
+        university: '',
+        degree: '',
         resumeUrl: ''
       },
       templateSettings: {
@@ -152,7 +152,7 @@ class PopupManager {
         companyName: '',
         positionTitle: 'Software Engineer',
         opportunityType: 'full-time opportunities',
-        timeline: 'starting May 2026',
+        timeline: '',
         jobLinks: '',
         recipientName: '',
         autoDetectProfile: true,
@@ -254,7 +254,7 @@ class PopupManager {
     document.getElementById('companyName').value = ts.companyName || '';
     document.getElementById('positionTitle').value = ts.positionTitle || '';
     document.getElementById('opportunityType').value = ts.opportunityType || 'full-time opportunities';
-    document.getElementById('timeline').value = ts.timeline || 'starting May 2026';
+    document.getElementById('timeline').value = ts.timeline || '';
     document.getElementById('jobLinks').value = ts.jobLinks || '';
     document.getElementById('recipientName').value = ts.recipientName || '';
 
@@ -428,19 +428,19 @@ class PopupManager {
     const companyName = document.getElementById('companyName')?.value || ts.companyName || '[Company]';
     const positionTitle = document.getElementById('positionTitle')?.value || ts.positionTitle || '[Position]';
     const opportunityType = document.getElementById('opportunityType')?.value || ts.opportunityType || 'full-time opportunities';
-    const timeline = document.getElementById('timeline')?.value || ts.timeline || 'starting May 2026';
+    const timeline = document.getElementById('timeline')?.value || ts.timeline || '[Timeline]';
     const jobLinks = document.getElementById('jobLinks')?.value || ts.jobLinks || '[Job Links]';
     const recipientName = document.getElementById('recipientName')?.value || ts.recipientName || '[Name]';
 
     const variables = {
       '{recipientName}': recipientName,
-      '{firstName}': pi.firstName || 'Sachin',
-      '{lastName}': pi.lastName || 'Adlakha',
-      '{fullName}': `${pi.firstName || 'Sachin'} ${pi.lastName || 'Adlakha'}`.trim(),
+      '{firstName}': pi.firstName || '[Your Name]',
+      '{lastName}': pi.lastName || '',
+      '{fullName}': `${pi.firstName || ''} ${pi.lastName || ''}`.trim() || '[Your Name]',
       '{email}': pi.email || '[Email]',
       '{phone}': pi.phone || '[Phone]',
-      '{university}': pi.university || 'NYU',
-      '{degree}': pi.degree || 'MS in Computer Science',
+      '{university}': pi.university || '[University]',
+      '{degree}': pi.degree || '[Degree]',
       '{resumeUrl}': pi.resumeUrl || '[Resume URL]',
       '{companyName}': companyName,
       '{positionTitle}': positionTitle,
@@ -474,7 +474,7 @@ class PopupManager {
       companyName: document.getElementById('companyName')?.value?.trim() || '',
       positionTitle: document.getElementById('positionTitle')?.value?.trim() || 'Software Engineer',
       opportunityType: document.getElementById('opportunityType')?.value?.trim() || 'full-time opportunities',
-      timeline: document.getElementById('timeline')?.value?.trim() || 'starting May 2026',
+      timeline: document.getElementById('timeline')?.value?.trim() || '',
       jobLinks: document.getElementById('jobLinks')?.value?.trim() || '',
       recipientName: document.getElementById('recipientName')?.value?.trim() || '',
       autoDetectProfile: document.getElementById('auto-detect-profile')?.checked !== false,
@@ -498,7 +498,7 @@ class PopupManager {
     document.getElementById('companyName').value = '';
     document.getElementById('positionTitle').value = 'Software Engineer';
     document.getElementById('opportunityType').value = 'full-time opportunities';
-    document.getElementById('timeline').value = 'starting May 2026';
+    document.getElementById('timeline').value = '';
     document.getElementById('jobLinks').value = '';
     document.getElementById('recipientName').value = '';
     this.updatePreview();

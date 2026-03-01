@@ -233,22 +233,22 @@ class FastStorageManager {
 
   getDefaultQuickActionTemplates() {
     return {
-      newConnection: `Hi {recipientName}, I'm Sachin, pursuing MS in CS at NYU. I'm interested in the {positionTitle} role at {companyName} and would love to connect and learn about your experience there. Thanks!`,
-      recruiter: `Hi {recipientName}, I'm Sachin, an MS in CS student at NYU seeking full-time opportunities starting May 2026. I'd love to connect and explore roles at {companyName}. Thanks!`,
-      firstReferral: `Hi {recipientName}, hope you're doing well! I'm reaching out because I'm very interested in the {positionTitle} role at {companyName}. I'm currently pursuing MS in CS at NYU and looking for full-time opportunities starting May 2026. Would you be open to referring me? Here's my resume: {resumeUrl}. Thanks so much for your time!`,
-      followUpReferral: `Hi {recipientName}, hope you're doing well! I wanted to follow up — I'm still actively looking for full-time roles starting May 2026. I noticed the {positionTitle} position at {companyName} and think it's a great fit. Would you be open to referring me again? Job link: {jobLinks}. Thanks a lot!`,
+      newConnection: `Hi {recipientName}, I'm {firstName}, pursuing {degree} at {university}. I'm interested in the {positionTitle} role at {companyName} and would love to connect and learn about your experience there. Thanks!`,
+      recruiter: `Hi {recipientName}, I'm {firstName}, a {degree} student at {university} seeking {opportunityType} {timeline}. I'd love to connect and explore roles at {companyName}. Thanks!`,
+      firstReferral: `Hi {recipientName}, hope you're doing well! I'm reaching out because I'm very interested in the {positionTitle} role at {companyName}. I'm currently pursuing {degree} at {university} and looking for {opportunityType} {timeline}. Would you be open to referring me? Here's my resume: {resumeUrl}. Thanks so much for your time!`,
+      followUpReferral: `Hi {recipientName}, hope you're doing well! I wanted to follow up — I'm still actively looking for {opportunityType} {timeline}. I noticed the {positionTitle} position at {companyName} and think it's a great fit. Would you be open to referring me again? Job link: {jobLinks}. Thanks a lot!`,
     };
   }
 
   getDefaultConfig() {
     return {
       personalInfo: {
-        firstName: "Sachin",
-        lastName: "Adlakha",
+        firstName: "",
+        lastName: "",
         email: "",
         phone: "",
-        university: "NYU",
-        degree: "MS in Computer Science",
+        university: "",
+        degree: "",
         resumeUrl: "",
       },
       templateSettings: {
@@ -256,7 +256,7 @@ class FastStorageManager {
         companyName: "",
         positionTitle: "Software Engineer",
         opportunityType: "full-time opportunities",
-        timeline: "starting May 2026",
+        timeline: "",
         jobLinks: "",
         recipientName: "",
         autoDetectProfile: true,
@@ -303,21 +303,21 @@ class FastTemplateProcessor {
     const variables = {
       "{recipientName}":
         profileData.firstName || settings.recipientName || "[Name]",
-      "{firstName}": personalInfo.firstName || "Sachin",
-      "{lastName}": personalInfo.lastName || "Adlakha",
+      "{firstName}": personalInfo.firstName || "[Your Name]",
+      "{lastName}": personalInfo.lastName || "",
       "{fullName}":
-        `${personalInfo.firstName || "Sachin"} ${personalInfo.lastName || "Adlakha"}`.trim(),
+        `${personalInfo.firstName || ""} ${personalInfo.lastName || ""}`.trim() || "[Your Name]",
       "{email}": personalInfo.email || "[Email]",
       "{phone}": personalInfo.phone || "[Phone]",
-      "{university}": personalInfo.university || "NYU",
-      "{degree}": personalInfo.degree || "MS in Computer Science",
+      "{university}": personalInfo.university || "[University]",
+      "{degree}": personalInfo.degree || "[Degree]",
       "{resumeUrl}": personalInfo.resumeUrl || "[Resume URL]",
       "{companyName}":
         settings.companyName || profileData.company || "[Company]",
       "{positionTitle}": settings.positionTitle || "[Position]",
       "{opportunityType}":
         settings.opportunityType || "full-time opportunities",
-      "{timeline}": settings.timeline || "starting May 2026",
+      "{timeline}": settings.timeline || "[Timeline]",
       "{jobLinks}": settings.jobLinks || "[Job Links]",
     };
 

@@ -4,6 +4,11 @@
   "version": "7.0",
   "description": "4 quick-copy message buttons for LinkedIn — new connections, recruiters, and referral requests",
   "permissions": ["activeTab", "storage", "clipboardWrite"],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.linkedin.com/*"],
@@ -13,6 +18,11 @@
   ],
   "action": {
     "default_title": "LinkedIn Connection Helper",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   }
 }

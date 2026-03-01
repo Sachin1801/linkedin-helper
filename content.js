@@ -1,5 +1,5 @@
 // LinkedIn Connection Helper v7.0 — 4 Quick-Copy Buttons
-console.log("LinkedIn Connection Helper v7.0 loading...");
+// v7.0 loaded
 
 // ─── Quick Action Definitions ──────────────────────────────────────────
 const QUICK_ACTIONS = [
@@ -188,7 +188,7 @@ class FastStorageManager {
   migrateSchemaIfNeeded() {
     if (!this.config || this.config.schemaVersion === 3) return;
 
-    console.log("[LI Helper] Migrating to v3 schema...");
+    // Migrating to v3 schema
 
     const defaults = this.getDefaultConfig();
 
@@ -227,7 +227,7 @@ class FastStorageManager {
     try {
       chrome.storage.sync.set({ [this.storageKey]: this.config });
     } catch (e) {
-      console.error("[LI Helper] Migration save failed:", e);
+      // Migration save failed silently
     }
   }
 
@@ -747,7 +747,7 @@ async function extractChatProfileData() {
 }
 
 async function insertMessageIntoChat(actionId) {
-  console.log("[LI Helper] Starting message insertion for:", actionId);
+  elementFinder.log("Starting message insertion for:", actionId);
 
   try {
     let messageBox = document.querySelector(
@@ -842,7 +842,7 @@ async function insertMessageIntoChat(actionId) {
 
     showNotification("✓ Message inserted! Review and click Send.", "success");
   } catch (error) {
-    console.error("[LI Helper] Error inserting message:", error);
+    elementFinder.log("Error inserting message:", error.message);
     showNotification(
       "⚠️ Error inserting message. Try using the copy button instead.",
       "error",
@@ -1089,7 +1089,7 @@ if (!window.__liHelperHistoryPatched) {
 window.liHelperStorage = {
   getConfig: async () => {
     const config = await storageManager.loadConfig();
-    console.log("[LI Helper] Current configuration:", config);
+    if (elementFinder.debug) console.log("[LI Helper] Current config:", config);
     return config;
   },
   setupPersonal: async (name, title, background) => {
@@ -1098,7 +1098,7 @@ window.liHelperStorage = {
       title,
       background,
     });
-    if (success) console.log("[LI Helper] ✓ Personal information updated");
+    if (success) elementFinder.log("Personal information updated");
     return success;
   },
 };
@@ -1125,4 +1125,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-console.log("LinkedIn Connection Helper v7.0 — 4 Quick-Copy Buttons ready!");
+// LinkedIn Connection Helper v7.0 — ready

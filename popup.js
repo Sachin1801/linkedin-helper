@@ -31,7 +31,7 @@ class PopupManager {
       this.initializeUI();
       this.updateConnectionStatus(true);
     } catch (error) {
-      console.error('Initialization error:', error);
+      // Initialization error silenced for production
       this.updateConnectionStatus(false);
     }
   }
@@ -172,7 +172,7 @@ class PopupManager {
   migrateSchemaIfNeeded() {
     if (this.currentConfig.schemaVersion === 3) return;
 
-    console.log('[Popup] Migrating to v3 schema...');
+    // Migrating to v3 schema
     const defaults = this.getDefaultConfig();
 
     // Preserve personal info
@@ -204,7 +204,7 @@ class PopupManager {
       await chrome.storage.sync.set({ [this.storageKey]: this.currentConfig });
       this.notifyContentScriptReload();
     } catch (error) {
-      console.error('Save error:', error);
+      // Save error silenced for production
     }
   }
 

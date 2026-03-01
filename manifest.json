@@ -1,18 +1,18 @@
 {
-    "manifest_version": 3,
-    "name": "LinkedIn Connection Helper",
-    "version": "5.0",
-    "description": "Auto-fills personalized connection messages on LinkedIn with advanced resilience and memory management",
-    "permissions": ["activeTab", "storage"],
-    "content_scripts": [
-      {
-        "matches": ["https://www.linkedin.com/*"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
-      }
-    ],
-    "action": {
-      "default_title": "LinkedIn Connection Helper",
-      "default_popup": "popup.html"
+  "manifest_version": 3,
+  "name": "LinkedIn Connection Helper",
+  "version": "7.0",
+  "description": "4 quick-copy message buttons for LinkedIn — new connections, recruiters, and referral requests",
+  "permissions": ["activeTab", "storage", "clipboardWrite"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
+  ],
+  "action": {
+    "default_title": "LinkedIn Connection Helper",
+    "default_popup": "popup.html"
   }
+}

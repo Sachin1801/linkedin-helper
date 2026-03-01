@@ -1,301 +1,630 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="popup-container">
-    <!-- Header -->
-    <div class="header">
-      <div class="logo">
-        <span class="icon">🤝</span>
-        <span class="title">LinkedIn Helper</span>
-      </div>
-      <div class="status">
-        <span id="connection-status" class="status-indicator">●</span>
-        <span id="status-text">Ready</span>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="tabs">
-      <button class="tab-button active" data-tab="personal">
-        <span class="tab-icon">👤</span>
-        Personal
-      </button>
-      <button class="tab-button" data-tab="templates">
-        <span class="tab-icon">📝</span>
-        Templates
-      </button>
-      <button class="tab-button" data-tab="settings">
-        <span class="tab-icon">⚙️</span>
-        Settings
-      </button>
-    </div>
-
-    <!-- Tab Contents -->
-    <div class="tab-content">
-      
-      <!-- Personal Info Tab -->
-      <div id="personal-tab" class="tab-panel active">
-        <div class="section-title">Personal Information</div>
-        
-        <form id="personal-form">
-          <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName" placeholder="e.g., Sachin" maxlength="50" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" placeholder="e.g., Adlakha" maxlength="50" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="e.g., sa9082@nyu.edu" maxlength="100" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="e.g., 6466335776" maxlength="20">
-          </div>
-          
-          <div class="form-group">
-            <label for="university">University</label>
-            <input type="text" id="university" placeholder="e.g., NYU" maxlength="100">
-          </div>
-          
-          <div class="form-group">
-            <label for="degree">Degree Program</label>
-            <input type="text" id="degree" placeholder="e.g., MS in Computer Science" maxlength="100">
-          </div>
-          
-          <div class="form-group">
-            <label for="resumeUrl">Resume URL</label>
-            <input type="url" id="resumeUrl" placeholder="e.g., https://drive.google.com/file/d/..." maxlength="500">
-          </div>
-          
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Information</button>
-            <button type="button" class="btn btn-secondary" id="test-variables">Test Variables</button>
-          </div>
-        </form>
-
-        <div class="info-box">
-          <div class="info-title">💡 How It Works</div>
-          <div class="info-text">
-            Your information will be automatically inserted into message templates based on the connection type you choose.
-          </div>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup-container">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">
+          <span class="icon">🤝</span>
+          <span class="title">LinkedIn Helper</span>
+        </div>
+        <div class="status">
+          <span id="connection-status" class="status-indicator">●</span>
+          <span id="status-text">Ready</span>
         </div>
       </div>
 
-      <!-- Templates Tab -->
-      <div id="templates-tab" class="tab-panel">
-        <div class="section-title">Message Templates</div>
-        
-        <div class="template-selector">
-          <label style="display: block; margin-bottom: 10px; font-weight: 600;">Message Type</label>
-          
-          <!-- Using styled radio buttons instead of problematic select -->
-          <div class="message-type-options">
-            <label class="message-type-option">
-              <input type="radio" name="messageType" value="newConnection" id="msg-new" checked>
-              <span class="option-label">
-                <span class="option-icon">🔗</span>
-                <span class="option-text">New Connection Request</span>
-              </span>
-            </label>
-            
-            <label class="message-type-option">
-              <input type="radio" name="messageType" value="afterAcceptance" id="msg-after">
-              <span class="option-label">
-                <span class="option-icon">✅</span>
-                <span class="option-text">Message After Acceptance</span>
-              </span>
-            </label>
-            
-            <label class="message-type-option">
-              <input type="radio" name="messageType" value="alreadyConnected" id="msg-already">
-              <span class="option-label">
-                <span class="option-icon">💬</span>
-                <span class="option-text">Already Connected</span>
-              </span>
-            </label>
-          </div>
-          
-          <div class="template-help-text" style="margin-top: 10px; font-size: 11px; color: #666;">
-            <div id="template-usage-hint">🔗 Use when clicking Connect → Add a note</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="companyName">Company Name</label>
-          <input type="text" id="companyName" placeholder="e.g., Fiserv, Uber, Ontra" maxlength="100">
-        </div>
-        
-        <div class="form-group">
-          <label for="positionTitle">Position Title</label>
-          <input type="text" id="positionTitle" placeholder="e.g., Summer Intern 2025, Software Engineer" maxlength="200">
-        </div>
-        
-        <div class="form-group">
-          <label for="opportunityType">Opportunity Type</label>
-          <input type="text" id="opportunityType" placeholder="e.g., internship opportunities, full-time roles" maxlength="100" value="internship opportunities">
-          <div style="font-size: 11px; color: #666; margin-top: 4px;">
-            Examples: "internship opportunities", "full-time roles", "new grad positions"
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="timeline">Timeline/Period</label>
-          <input type="text" id="timeline" placeholder="e.g., Summer 2025, Fall 2024, starting May 2025" maxlength="100" value="Summer 2025">
-          <div style="font-size: 11px; color: #666; margin-top: 4px;">
-            Examples: "Summer 2025", "Fall 2024", "starting January 2025", "2025"
-          </div>
-        </div>
-        
-        <div class="form-group" id="jobLinksGroup">
-          <label for="jobLinks">Job Link(s)</label>
-          <textarea id="jobLinks" rows="3" placeholder="Enter job links (one per line)"></textarea>
-        </div>
-        
-        <div class="form-group" id="recipientNameGroup" style="display: none;">
-          <label for="recipientName">Recipient's Name</label>
-          <input type="text" id="recipientName" placeholder="Will be auto-filled from LinkedIn profile" maxlength="100">
-        </div>
-
-        <div class="template-options">
-          <label class="checkbox-wrapper">
-            <input type="checkbox" id="auto-detect-profile" checked>
-            <span class="checkmark"></span>
-            Auto-detect profile information
-          </label>
-          <label class="checkbox-wrapper">
-            <input type="checkbox" id="preview-before-send" checked>
-            <span class="checkmark"></span>
-            Preview message before inserting
-          </label>
-        </div>
-
-        <div class="template-preview">
-          <div class="preview-title">
-            Message Preview
-            <span id="char-counter" style="float: right; font-size: 12px; color: #666;"></span>
-          </div>
-          <div id="template-preview-text" class="preview-text">
-            Fill in the fields above to see the message preview...
-          </div>
-        </div>
-
-        <div class="template-actions">
-          <button class="btn btn-primary" id="save-template-settings">Save Template Settings</button>
-          <button class="btn btn-secondary" id="copy-message">Copy Message</button>
-          <button class="btn btn-secondary" id="reset-template">Reset Fields</button>
-        </div>
-
-        <div class="info-box" style="margin-top: 20px;">
-          <div class="info-title">📌 How to Use Each Message Type</div>
-          <div class="info-text" style="line-height: 1.6;">
-            <strong>🔗 New Connection Request:</strong><br>
-            • Click "Connect" on someone's profile<br>
-            • Click "Add a note" when the modal appears<br>
-            • Message will auto-fill with their name detected<br><br>
-            
-            <strong>✅ Message After Acceptance:</strong><br>
-            • Go to LinkedIn messaging or open a chat<br>
-            • Click the ✉️ button (appears on messaging pages)<br>
-            • Or use keyboard shortcut: Ctrl+Shift+M (Cmd+Shift+M on Mac)<br>
-            • Message will auto-fill with recipient's name<br><br>
-            
-            <strong>💬 Already Connected:</strong><br>
-            • Same as above - open their message thread<br>
-            • Click ✉️ button or use Ctrl+Shift+M<br>
-            • Includes your contact details for referral
-          </div>
-        </div>
+      <!-- Navigation Tabs -->
+      <div class="tabs">
+        <button class="tab-button active" data-tab="personal">
+          <span class="tab-icon">👤</span>
+          Personal
+        </button>
+        <button class="tab-button" data-tab="templates">
+          <span class="tab-icon">📝</span>
+          Templates
+        </button>
+        <button class="tab-button" data-tab="settings">
+          <span class="tab-icon">⚙️</span>
+          Settings
+        </button>
       </div>
 
-      <!-- Settings Tab -->
-      <div id="settings-tab" class="tab-panel">
-        <div class="section-title">Extension Settings</div>
-        
-        <div class="settings-group">
-          <div class="setting-item">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" id="extension-enabled" checked>
-              <span class="checkmark"></span>
-              Extension Enabled
-            </label>
-            <div class="setting-description">Enable/disable the LinkedIn Connection Helper</div>
-          </div>
+      <!-- Tab Contents -->
+      <div class="tab-content">
+        <!-- Personal Info Tab -->
+        <div id="personal-tab" class="tab-panel active">
+          <div class="section-title">Personal Information</div>
 
-          <div class="setting-item">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" id="notifications-enabled" checked>
-              <span class="checkmark"></span>
-              Show Notifications
-            </label>
-            <div class="setting-description">Display success/error notifications</div>
-          </div>
-
-          <div class="setting-item">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" id="debug-mode">
-              <span class="checkmark"></span>
-              Debug Mode
-            </label>
-            <div class="setting-description">Enable detailed console logging</div>
-          </div>
-
-          <div class="setting-item">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" id="show-detected-info" checked>
-              <span class="checkmark"></span>
-              Show Detected Info
-            </label>
-            <div class="setting-description">Display detected profile information</div>
-          </div>
-        </div>
-
-        <div class="settings-group">
-          <div class="section-title">Data Management</div>
-          
-          <div class="data-actions">
-            <button class="btn btn-secondary" id="export-settings">Export Settings</button>
-            <button class="btn btn-secondary" id="import-settings">Import Settings</button>
-            <button class="btn btn-danger" id="reset-settings">Reset to Defaults</button>
-          </div>
-          
-          <div class="storage-info">
-            <div class="storage-label">Storage Usage:</div>
-            <div class="storage-bar">
-              <div id="storage-progress" class="storage-fill" style="width: 0%"></div>
+          <form id="personal-form">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="e.g., Sachin"
+                maxlength="50"
+                required
+              />
             </div>
-            <div id="storage-text" class="storage-text">Loading...</div>
+
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                placeholder="e.g., Adlakha"
+                maxlength="50"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="e.g., sa9082@nyu.edu"
+                maxlength="100"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="e.g., 6466335776"
+                maxlength="20"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="university">University</label>
+              <input
+                type="text"
+                id="university"
+                placeholder="e.g., NYU"
+                maxlength="100"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="degree">Degree Program</label>
+              <input
+                type="text"
+                id="degree"
+                placeholder="e.g., MS in Computer Science"
+                maxlength="100"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="resumeUrl">Resume URL</label>
+              <input
+                type="url"
+                id="resumeUrl"
+                placeholder="e.g., https://drive.google.com/file/d/..."
+                maxlength="500"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Save Information
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="test-variables"
+              >
+                Test Variables
+              </button>
+            </div>
+          </form>
+
+          <div class="info-box">
+            <div class="info-title">💡 How It Works</div>
+            <div class="info-text">
+              Your information will be automatically inserted into message
+              templates. Use the floating 🤝 button on LinkedIn to quickly copy
+              messages.
+            </div>
           </div>
         </div>
 
-        <div class="footer-info">
-          <div class="version">v3.0 - Multi-Template System</div>
-          <div class="privacy">No data sent to external servers</div>
+        <!-- Templates Tab -->
+        <div id="templates-tab" class="tab-panel">
+          <div class="section-title">Message Templates</div>
+
+          <!-- Message Type Selector -->
+          <div class="template-selector">
+            <label style="display: block; margin-bottom: 10px; font-weight: 600"
+              >Quick Action Type</label
+            >
+
+            <div class="message-type-options">
+              <label class="message-type-option">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="newConnection"
+                  id="msg-new"
+                  checked
+                />
+                <span class="option-label">
+                  <span class="option-icon">🔗</span>
+                  <span class="option-text"
+                    >New Connection
+                    <span style="font-size: 10px; color: #94a3b8"
+                      >≤300</span
+                    ></span
+                  >
+                </span>
+              </label>
+
+              <label class="message-type-option">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="recruiter"
+                  id="msg-recruiter"
+                />
+                <span class="option-label">
+                  <span class="option-icon">🎯</span>
+                  <span class="option-text"
+                    >Recruiter
+                    <span style="font-size: 10px; color: #94a3b8"
+                      >≤300</span
+                    ></span
+                  >
+                </span>
+              </label>
+
+              <label class="message-type-option">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="firstReferral"
+                  id="msg-first-ref"
+                />
+                <span class="option-label">
+                  <span class="option-icon">💬</span>
+                  <span class="option-text"
+                    >First Referral
+                    <span style="font-size: 10px; color: #94a3b8"
+                      >≤500</span
+                    ></span
+                  >
+                </span>
+              </label>
+
+              <label class="message-type-option">
+                <input
+                  type="radio"
+                  name="messageType"
+                  value="followUpReferral"
+                  id="msg-followup"
+                />
+                <span class="option-label">
+                  <span class="option-icon">🔄</span>
+                  <span class="option-text"
+                    >Follow-up
+                    <span style="font-size: 10px; color: #94a3b8"
+                      >≤500</span
+                    ></span
+                  >
+                </span>
+              </label>
+            </div>
+
+            <div
+              class="template-help-text"
+              style="margin-top: 10px; font-size: 11px; color: #666"
+            >
+              <div id="template-usage-hint">
+                🔗 Use when clicking Connect → Add a note
+              </div>
+            </div>
+          </div>
+
+          <!-- Template Editor Section -->
+          <div
+            class="template-editor-section"
+            style="
+              margin-top: 20px;
+              border: 1px solid #e0e0e0;
+              border-radius: 8px;
+              padding: 15px;
+              background: #fafafa;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+              "
+            >
+              <label style="font-weight: 600; font-size: 14px"
+                >Edit Template Content</label
+              >
+              <button
+                class="btn btn-secondary"
+                id="reset-to-default-template"
+                style="padding: 5px 10px; font-size: 11px"
+              >
+                Reset to Default
+              </button>
+            </div>
+            <div id="current-template-label" class="current-template-label">
+              Editing: New Connection
+            </div>
+
+            <textarea
+              id="template-editor"
+              rows="10"
+              style="
+                width: 100%;
+                font-family: monospace;
+                font-size: 12px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                resize: vertical;
+                min-height: 150px;
+              "
+              placeholder="Edit your template here..."
+            ></textarea>
+
+            <div
+              id="char-limit-warning"
+              style="
+                display: none;
+                margin-top: 4px;
+                padding: 6px 10px;
+                background: #fef3c7;
+                border: 1px solid #f59e0b;
+                border-radius: 4px;
+                font-size: 11px;
+                color: #92400e;
+              "
+            >
+              ⚠️ Template exceeds character limit!
+            </div>
+
+            <div
+              class="available-variables"
+              style="
+                margin-top: 10px;
+                padding: 10px;
+                background: #fff;
+                border-radius: 4px;
+                border: 1px solid #e0e0e0;
+              "
+            >
+              <div
+                style="font-weight: 600; font-size: 12px; margin-bottom: 8px"
+              >
+                Available Variables (click to insert):
+              </div>
+              <div
+                id="variable-buttons"
+                style="display: flex; flex-wrap: wrap; gap: 5px"
+              >
+                <span
+                  class="variable-tag"
+                  data-var="{recipientName}"
+                  title="Recipient's first name"
+                  >{recipientName}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{firstName}"
+                  title="Your first name"
+                  >{firstName}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{lastName}"
+                  title="Your last name"
+                  >{lastName}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{fullName}"
+                  title="Your full name"
+                  >{fullName}</span
+                >
+                <span class="variable-tag" data-var="{email}" title="Your email"
+                  >{email}</span
+                >
+                <span class="variable-tag" data-var="{phone}" title="Your phone"
+                  >{phone}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{university}"
+                  title="Your university"
+                  >{university}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{degree}"
+                  title="Your degree"
+                  >{degree}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{resumeUrl}"
+                  title="Your resume URL"
+                  >{resumeUrl}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{companyName}"
+                  title="Target company"
+                  >{companyName}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{positionTitle}"
+                  title="Position title"
+                  >{positionTitle}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{opportunityType}"
+                  title="Opportunity type"
+                  >{opportunityType}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{timeline}"
+                  title="Timeline/period"
+                  >{timeline}</span
+                >
+                <span
+                  class="variable-tag"
+                  data-var="{jobLinks}"
+                  title="Job links"
+                  >{jobLinks}</span
+                >
+              </div>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              id="save-template-content"
+              style="margin-top: 10px; width: 100%"
+            >
+              Save Template
+            </button>
+          </div>
+
+          <!-- Quick Fill Variables Section -->
+          <div class="section-title" style="margin-top: 20px">
+            Quick Fill Variables
+          </div>
+
+          <div class="form-group">
+            <label for="companyName">Company Name</label>
+            <input
+              type="text"
+              id="companyName"
+              placeholder="e.g., Fiserv, Uber, Ontra"
+              maxlength="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="positionTitle">Position Title</label>
+            <input
+              type="text"
+              id="positionTitle"
+              placeholder="e.g., Software Engineer, SDE"
+              maxlength="200"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="opportunityType">Opportunity Type</label>
+            <input
+              type="text"
+              id="opportunityType"
+              placeholder="e.g., full-time roles, new grad positions"
+              maxlength="100"
+              value="full-time opportunities"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="timeline">Timeline/Period</label>
+            <input
+              type="text"
+              id="timeline"
+              placeholder="e.g., starting May 2026"
+              maxlength="100"
+              value="starting May 2026"
+            />
+          </div>
+
+          <div class="form-group" id="jobLinksGroup">
+            <label for="jobLinks">Job Link(s)</label>
+            <textarea
+              id="jobLinks"
+              rows="3"
+              placeholder="Enter job links (one per line)"
+            ></textarea>
+          </div>
+
+          <div class="form-group" id="recipientNameGroup" style="display: none">
+            <label for="recipientName">Recipient's Name</label>
+            <input
+              type="text"
+              id="recipientName"
+              placeholder="Will be auto-filled from LinkedIn profile"
+              maxlength="100"
+            />
+          </div>
+
+          <div class="template-options">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="auto-detect-profile" checked />
+              <span class="checkmark"></span>
+              Auto-detect profile information
+            </label>
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="preview-before-send" checked />
+              <span class="checkmark"></span>
+              Preview message before inserting
+            </label>
+          </div>
+
+          <div class="template-preview">
+            <div class="preview-title">
+              Message Preview
+              <span
+                id="char-counter"
+                style="float: right; font-size: 12px; color: #666"
+              ></span>
+            </div>
+            <div id="template-preview-text" class="preview-text">
+              Fill in the fields above to see the message preview...
+            </div>
+          </div>
+
+          <div class="template-actions">
+            <button class="btn btn-primary" id="save-template-settings">
+              Save All Settings
+            </button>
+            <button class="btn btn-secondary" id="copy-message">
+              Copy Message
+            </button>
+            <button class="btn btn-secondary" id="reset-template">
+              Reset Fields
+            </button>
+          </div>
+
+          <div class="info-box" style="margin-top: 20px">
+            <div class="info-title">📌 How to Use</div>
+            <div class="info-text" style="line-height: 1.6">
+              <strong>On LinkedIn:</strong><br />
+              • Click the 🤝 button → choose a quick action<br />
+              • Message is copied to clipboard automatically<br />
+              • Paste into LinkedIn message box<br /><br />
+
+              <strong>Connect → Add a note:</strong><br />
+              • Click "Connect" → message auto-fills (≤300 chars)<br /><br />
+
+              <strong>Keyboard shortcut:</strong> Ctrl+Shift+M in messaging
+            </div>
+          </div>
         </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-panel">
+          <div class="section-title">Extension Settings</div>
+
+          <div class="settings-group">
+            <div class="setting-item">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" id="extension-enabled" checked />
+                <span class="checkmark"></span>
+                Extension Enabled
+              </label>
+              <div class="setting-description">
+                Enable/disable the LinkedIn Connection Helper
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" id="notifications-enabled" checked />
+                <span class="checkmark"></span>
+                Show Notifications
+              </label>
+              <div class="setting-description">
+                Display success/error notifications
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" id="debug-mode" />
+                <span class="checkmark"></span>
+                Debug Mode
+              </label>
+              <div class="setting-description">
+                Enable detailed console logging
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <label class="checkbox-wrapper">
+                <input type="checkbox" id="show-detected-info" checked />
+                <span class="checkmark"></span>
+                Show Detected Info
+              </label>
+              <div class="setting-description">
+                Display detected profile information
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="section-title">Data Management</div>
+
+            <div class="data-actions">
+              <button class="btn btn-secondary" id="export-settings">
+                Export Settings
+              </button>
+              <button class="btn btn-secondary" id="import-settings">
+                Import Settings
+              </button>
+              <button class="btn btn-danger" id="reset-settings">
+                Reset to Defaults
+              </button>
+            </div>
+
+            <div class="storage-info">
+              <div class="storage-label">Storage Usage:</div>
+              <div class="storage-bar">
+                <div
+                  id="storage-progress"
+                  class="storage-fill"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <div id="storage-text" class="storage-text">Loading...</div>
+            </div>
+          </div>
+
+          <div class="footer-info">
+            <div class="version">v7.0 — 4 Quick-Copy Buttons</div>
+            <div class="privacy">No data sent to external servers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Overlay -->
+      <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+      </div>
+
+      <!-- Notification Toast -->
+      <div id="notification-toast" class="notification-toast hidden">
+        <span id="notification-message"></span>
       </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay hidden">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">Loading...</div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="notification-toast" class="notification-toast hidden">
-      <span id="notification-message"></span>
-    </div>
-  </div>
-
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>

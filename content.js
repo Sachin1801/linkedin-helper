@@ -1034,11 +1034,152 @@ function createFloatingPanel() {
 
 const floatingPanel = createFloatingPanel();
 
+// ─── First-Run Welcome Modal ───────────────────────────────────────────
+function showWelcomeModal() {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.id = "li-helper-welcome-overlay";
+    overlay.style.cssText = `
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10100; padding: 16px; box-sizing: border-box;
+      animation: liHelperFadeIn 0.3s ease;
+    `;
+
+    const modal = document.createElement("div");
+    modal.style.cssText = `
+      width: min(480px, 100%);
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    `;
+
+    const inputStyle = `
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: 14px; font-family: inherit;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    `;
+
+    const labelStyle = `
+      display: block; font-size: 13px; font-weight: 600;
+      color: #334155; margin-bottom: 5px;
+    `;
+
+    modal.innerHTML = `
+      <div style="background: linear-gradient(135deg, #0a66c2, #004182); color: white; padding: 24px 28px;">
+        <div style="font-size: 28px; margin-bottom: 6px;">🤝</div>
+        <div style="font-size: 20px; font-weight: 700;">Welcome to LinkedIn Helper!</div>
+        <div style="font-size: 13px; opacity: 0.85; margin-top: 6px;">Fill in your details to personalize your message templates.</div>
+      </div>
+      <div style="padding: 24px 28px;">
+        <div style="margin-bottom: 16px;">
+          <label style="${labelStyle}">First Name *</label>
+          <input id="welcome-firstName" type="text" placeholder="e.g., John" style="${inputStyle}" />
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="${labelStyle}">University</label>
+          <input id="welcome-university" type="text" placeholder="e.g., MIT, Stanford, NYU" style="${inputStyle}" />
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="${labelStyle}">Degree Program</label>
+          <input id="welcome-degree" type="text" placeholder="e.g., MS in Computer Science" style="${inputStyle}" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="${labelStyle}">Job Search Timeline</label>
+          <input id="welcome-timeline" type="text" placeholder="e.g., starting May 2026" style="${inputStyle}" />
+        </div>
+        <button id="welcome-save-btn" style="
+          width: 100%; padding: 12px;
+          background: linear-gradient(135deg, #0a66c2, #004182);
+          color: white; border: none; border-radius: 10px;
+          font-size: 15px; font-weight: 600; cursor: pointer;
+          transition: opacity 0.2s;
+          font-family: inherit;
+        ">Save & Get Started →</button>
+        <div style="text-align: center; margin-top: 12px;">
+          <a id="welcome-skip-link" href="#" style="font-size: 12px; color: #94a3b8; text-decoration: none;">Skip for now</a>
+        </div>
+      </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // Focus styling
+    modal.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("focus", () => {
+        input.style.borderColor = "#0a66c2";
+        input.style.outline = "none";
+      });
+      input.addEventListener("blur", () => {
+        input.style.borderColor = "#e2e8f0";
+      });
+    });
+
+    // Save button
+    modal.querySelector("#welcome-save-btn").addEventListener("click", async () => {
+      const firstName = modal.querySelector("#welcome-firstName").value.trim();
+      if (!firstName) {
+        const input = modal.querySelector("#welcome-firstName");
+        input.style.borderColor = "#ef4444";
+        input.focus();
+        return;
+      }
+
+      const university = modal.querySelector("#welcome-university").value.trim();
+      const degree = modal.querySelector("#welcome-degree").value.trim();
+      const timeline = modal.querySelector("#welcome-timeline").value.trim();
+
+      const config = await storageManager.loadConfig();
+      config.personalInfo.firstName = firstName;
+      if (university) config.personalInfo.university = university;
+      if (degree) config.personalInfo.degree = degree;
+      if (timeline) config.templateSettings.timeline = timeline;
+      config.setupComplete = true;
+
+      await storageManager.saveConfig();
+
+      overlay.style.opacity = "0";
+      overlay.style.transition = "opacity 0.3s ease";
+      setTimeout(() => {
+        overlay.remove();
+        resolve(true);
+      }, 300);
+
+      showNotification("✓ You're all set! Click the 🤝 button to copy messages.", "success");
+    });
+
+    // Skip link
+    modal.querySelector("#welcome-skip-link").addEventListener("click", async (e) => {
+      e.preventDefault();
+      const config = await storageManager.loadConfig();
+      config.setupComplete = true;
+      await storageManager.saveConfig();
+
+      overlay.remove();
+      resolve(false);
+
+      showNotification("💡 You can set up your info anytime from the extension popup.", "info");
+    });
+  });
+}
+
 // ─── Initialize ────────────────────────────────────────────────────────
 async function initializeRuntimeState() {
   try {
     const config = await storageManager.loadConfig();
     applyRuntimePreferences(config);
+
+    // Show welcome modal if first run (no personal info filled in)
+    if (!config.setupComplete && !config.personalInfo.firstName) {
+      floatingPanel.container.style.display = "none";
+      await showWelcomeModal();
+      floatingPanel.container.style.display = "flex";
+    }
   } catch (error) {
     extensionEnabled = true;
     notificationsEnabled = true;
